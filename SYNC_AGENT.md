@@ -10,7 +10,7 @@ Components & locations
 
 - LaunchAgent plist: `~/Library/LaunchAgents/com.user.git-bidirectional-sync.plist`
 - Sync script: `~/.sync/git-bidirectional-sync.sh`
-- Repository copy (target of the agent): `~/.sync/repos/CSV-to-ASC`
+- Repository target (LaunchAgent now points to workspace): `/Users/mddexter/GitHub Repos/CSV-to-ASC`
 - Logs directory: `~/.sync/logs/` (files like `sync_YYYYMMDD_HHMMSS.log`)
 
 Schedule
@@ -32,7 +32,7 @@ Behavior
 Safety notes
 ------------
 
-- The agent operates on the local copy inside `~/.sync/repos/CSV-to-ASC` — not the working folder you may be editing elsewhere. Confirm paths before making changes.
+- The agent operates on the specified repository path (by default previously `~/.sync/repos/CSV-to-ASC`). It now targets your workspace at `/Users/mddexter/GitHub Repos/CSV-to-ASC`, so automated pulls/commits will affect the copy you edit in your editor. Confirm paths before making changes.
 - Commits created by the script use a generic commit message: `Auto-sync: YYYY-MM-DD HH:MM:SS`.
 - If a merge conflict is detected the script will abort and record conflict details to `~/.sync/logs/conflicts_*.log` for manual resolution.
 - Git credentials used are whatever the Git environment and credential helpers provide (SSH keys, macOS Keychain credential helpers, or cached credentials). Be careful when sharing or modifying the script so you don't expose secrets.
@@ -100,3 +100,13 @@ Questions / Next steps
 ---------------------
 
 - Would you like me to commit this file to the repository branch for you, or make any edits (more details, example logs, or screenshots)?
+Recent changes (2026-06-22)
+--------------------------
+
+- Backed up the original LaunchAgent plist to `~/Library/LaunchAgents/com.user.git-bidirectional-sync.plist.bak`.
+- Updated `~/Library/LaunchAgents/com.user.git-bidirectional-sync.plist` to point `ProgramArguments` and `WorkingDirectory` at `/Users/mddexter/GitHub Repos/CSV-to-ASC` so the agent now operates directly on your workspace.
+- Reloaded the LaunchAgent with `launchctl unload` / `launchctl load` and confirmed it is loaded (`launchctl list` shows `com.user.git-bidirectional-sync`).
+- Ran the sync script manually against the workspace; the run completed successfully and wrote a log to `~/.sync/logs/sync_20260622_232345.log`.
+- Updated this document to reflect the new target and recorded the change log here.
+
+Would you like me to add example log output or further notes about restoring the original plist? 
